@@ -1150,7 +1150,7 @@
   </div>
 </div>
 
-<!-- Modal: ซ่อมเสร็จ (ช่าง) -->
+<!-- Modal: ซ่อมเสร็จ (ช่าง) [แก้ไข: ลบฟอร์มลายเซ็นออนไลน์ออกแล้ว] -->
 <div class="modal-overlay" id="modalComplete">
   <div class="modal" style="max-width:560px">
     <div class="modal-header">
@@ -1170,14 +1170,6 @@
         </div>
         <input type="file" id="fileInputAfter" multiple accept="image/*" class="hidden" onchange="previewImages(this,'previewAfter','photosAfter')">
         <div class="img-preview-grid" id="previewAfter"></div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">ลายเซ็นช่าง</label>
-        <div class="sig-pad-wrap">
-          <canvas id="sigTech" height="100"></canvas>
-          <button class="sig-clear" onclick="clearSig('sigTech')">ล้าง</button>
-          <div class="sig-pad-label">เซ็นชื่อในกรอบด้านบน</div>
-        </div>
       </div>
     </div>
     <div class="modal-footer">
@@ -1761,7 +1753,6 @@ function openComplete(id) {
   document.getElementById('previewAfter').innerHTML = '';
   document.getElementById('completeNote').value = '';
   openModal('modalComplete');
-
 }
 
 function confirmComplete() {
@@ -1811,7 +1802,7 @@ function deleteRequest(id) {
 }
 
 // ══════════════════════════════════════════════════════
-//  PRINT
+//  PRINT [แก้ไข: เอาส่วนแสดงรูปภาพ r.sigTech ออก คงไว้แต่ช่องสำหรับเขียนลายเซ็นสดด้วยปากกาเหมือนเดิม]
 // ══════════════════════════════════════════════════════
 function openPrint(id) {
   const r = requests.find(x => x.id === id);
@@ -1825,9 +1816,8 @@ function openPrint(id) {
     ? r.photosAfter.map(p => `<img src="${p}" style="width:100%;max-height:200px;object-fit:cover;border-radius:8px;margin-bottom:8px;border:1px solid #e2e8f0">`).join('')
     : '<p style="color:#94a3b8;font-size:13px;padding:12px 0">ไม่มีรูปหลังซ่อม</p>';
 
-  const sigTechHtml = r.sigTech
-    
-     '<div style="height:70px;border-bottom:1.5px solid #1e293b"></div>';
+  // ช่างใช้สำหรับเขียนเซ็นสดลงบนกระดาษเสมอ
+  const sigTechHtml = '<div style="height:70px;border-bottom:1.5px solid #1e293b"></div>';
   const sigUserHtml = r.sigUser
     ? `<img src="${r.sigUser}" style="width:100%;max-height:90px;object-fit:contain;border-bottom:1.5px solid #1e293b">`
     : '<div style="height:70px;border-bottom:1.5px solid #1e293b"></div>';
