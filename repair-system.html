@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ระบบแจ้งซ่อม</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --primary: #1a56db;
+    --primary-dark: #1040a0;
+    --primary-light: #e8f0fe;
+    --accent: #f59e0b;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --text-light: #64748b;
+    --text-muted: #94a3b8;
+    --sidebar-bg: #0f172a;
+    --sidebar-text: #cbd5e1;
+    --sidebar-active: #1a56db;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.06);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sarabun', 'Noto Sans Thai', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── LOGIN ─────────────────────────────────── */
+  #loginScreen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #1a56db 100%);
+    padding: 20px;
+  }
+  .login-box {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 48px 40px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: var(--shadow-lg);
+  }
+  .login-logo {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .login-logo .icon {
+    width: 64px; height: 64px;
+    background: var(--primary);
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+  .login-logo h1 { font-size: 22px; font-weight: 700; color: var(--text); }
+  .login-logo p { color: var(--text-light); font-size: 14px; margin-top: 4px; }
+
+  .login-tabs {
+    display: flex;
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 24px;
+  }
+  .login-tab {
+    flex: 1; padding: 8px;
+    border: none; background: transparent;
+    border-radius: 8px; cursor: pointer;
+    font-size: 14px; font-weight: 500;
+    font-family: inherit;
+    color: var(--text-light);
+    transition: all .2s;
+  }
+  .login-tab.active {
+    background: var(--card);
+    color: var(--primary);
+    box-shadow: 0 1px 4px rgba(0,0,0,.12);
+  }
+
+  .form-group { margin-bottom: 16px; }
+  .form-label {
+    display: block;
+    font-size: 13px; font-weight: 600;
+    color: var(--text-light);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  .form-input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 9px;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--text);
+    background: var(--card);
+    transition: border-color .2s, box-shadow .2s;
+    outline: none;
+  }
+  .form-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(26,86,219,.12);
+  }
+  .form-select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 9px;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--text);
+    background: var(--card);
+    outline: none;
+    cursor: pointer;
+  }
+  .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(26,86,219,.12);
+  }
+  .form-textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 9px;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--text);
+    background: var(--card);
+    resize: vertical;
+    min-height: 90px;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .form-textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(26,86,219,.12);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all .2s;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: var(--primary);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+  .btn-block { width: 100%; justify-content: center; padding: 13px; }
+  .btn-secondary { background: var(--bg); color: var(--text); border: 1.5px solid var(--border); }
+  .btn-secondary:hover { background: var(--border); }
+  .btn-success { background: var(--success); color: #fff; }
+  .btn-success:hover { background: #059669; }
+  .btn-danger { background: var(--danger); color: #fff; }
+  .btn-danger:hover { background: #dc2626; }
+  .btn-warning { background: var(--warning); color: #fff; }
+  .btn-warning:hover { background: #d97706; }
+  .btn-sm { padding: 6px 12px; font-size: 13px; border-radius: 7px; }
+  .btn-icon { padding: 8px; border-radius: 8px; }
+
+  /* ── APP LAYOUT ─────────────────────────────── */
+  #app { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: 240px;
+    background: var(--sidebar-bg);
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+    transition: transform .3s;
+  }
+  .sidebar-header {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  .sidebar-title { color: #fff; font-size: 16px; font-weight: 700; }
+  .sidebar-sub { color: var(--sidebar-text); font-size: 12px; margin-top: 2px; }
+
+  .sidebar-user {
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  .user-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .user-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .user-name { color: #fff; font-size: 14px; font-weight: 600; }
+  .user-role { color: var(--sidebar-text); font-size: 11px; }
+
+  .sidebar-nav {
+    flex: 1;
+    padding: 12px 10px;
+    overflow-y: auto;
+  }
+  .nav-section-label {
+    color: rgba(255,255,255,.3);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 8px 10px 4px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 9px;
+    cursor: pointer;
+    color: var(--sidebar-text);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all .2s;
+    margin-bottom: 2px;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    width: 100%;
+    text-align: left;
+  }
+  .nav-item:hover { background: rgba(255,255,255,.06); color: #fff; }
+  .nav-item.active { background: var(--primary); color: #fff; }
+  .nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+  .nav-badge {
+    margin-left: auto;
+    background: var(--danger);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 20px;
+  }
+
+  .sidebar-footer {
+    padding: 12px 10px;
+    border-top: 1px solid rgba(255,255,255,.06);
+  }
+
+  /* ── MAIN CONTENT ─────────────────────────────── */
+  .main {
+    flex: 1;
+    margin-left: 240px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  .topbar {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .topbar-title { font-size: 17px; font-weight: 700; color: var(--text); }
+  .topbar-actions { display: flex; align-items: center; gap: 10px; }
+
+  .content { padding: 28px 24px; flex: 1; }
+
+  /* ── CARDS & STATS ─────────────────────────────── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .stat-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .stat-icon.blue { background: #dbeafe; }
+  .stat-icon.yellow { background: #fef3c7; }
+  .stat-icon.green { background: #d1fae5; }
+  .stat-icon.red { background: #fee2e2; }
+  .stat-num { font-size: 26px; font-weight: 700; line-height: 1; }
+  .stat-label { font-size: 13px; color: var(--text-light); margin-top: 3px; }
+
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .card-title { font-size: 16px; font-weight: 700; }
+  .card-body { padding: 20px; }
+
+  /* ── TABLE ─────────────────────────────── */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    background: var(--bg);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  tbody td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    vertical-align: middle;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--bg); }
+
+  /* ── BADGES ─────────────────────────────── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .badge-pending { background: #fef3c7; color: #92400e; }
+  .badge-assigned { background: #dbeafe; color: #1e40af; }
+  .badge-progress { background: #e0e7ff; color: #3730a3; }
+  .badge-done { background: #d1fae5; color: #065f46; }
+  .badge-cancel { background: #fee2e2; color: #991b1b; }
+
+  /* ── IMAGE UPLOAD ─────────────────────────────── */
+  .img-upload-area {
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .2s;
+    background: var(--bg);
+  }
+  .img-upload-area:hover, .img-upload-area.drag {
+    border-color: var(--primary);
+    background: var(--primary-light);
+  }
+  .img-upload-area .upload-icon { font-size: 32px; margin-bottom: 8px; }
+  .img-upload-area p { font-size: 14px; color: var(--text-light); }
+  .img-upload-area small { font-size: 12px; color: var(--text-muted); }
+  .img-preview-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .img-preview-item {
+    position: relative;
+    width: 90px; height: 90px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .img-preview-item img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .img-preview-item .remove-img {
+    position: absolute;
+    top: 3px; right: 3px;
+    width: 20px; height: 20px;
+    background: rgba(0,0,0,.6);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  /* ── MODAL ─────────────────────────────── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--card);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 640px;
+    max-height: 92vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(20px);
+    transition: transform .25s;
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background: var(--card);
+    z-index: 1;
+  }
+  .modal-title { font-size: 17px; font-weight: 700; }
+  .modal-close {
+    width: 32px; height: 32px;
+    border: none;
+    background: var(--bg);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .modal-body { padding: 20px 24px; }
+  .modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  /* ── SIGNATURE PAD ─────────────────────────────── */
+  .sig-pad-wrap {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fafafa;
+    position: relative;
+  }
+  .sig-pad-wrap canvas {
+    display: block;
+    width: 100%;
+    cursor: crosshair;
+  }
+  .sig-pad-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 4px 10px 8px;
+    text-align: center;
+    border-top: 1px dashed var(--border);
+  }
+  .sig-clear {
+    position: absolute;
+    top: 6px; right: 8px;
+    font-size: 11px;
+    padding: 3px 8px;
+    background: rgba(0,0,0,.06);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--text-light);
+  }
+
+  /* ── PRINT ─────────────────────────────── */
+  .print-doc {
+    background: #fff;
+    padding: 32px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+  .print-header {
+    text-align: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--text);
+  }
+  .print-header h2 { font-size: 20px; font-weight: 700; }
+  .print-header p { font-size: 14px; color: var(--text-light); margin-top: 4px; }
+  .print-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 16px;
+    margin-bottom: 16px;
+  }
+  .print-field { font-size: 14px; }
+  .print-field-label { color: var(--text-light); font-size: 12px; font-weight: 600; text-transform: uppercase; }
+  .print-field-value { font-weight: 500; }
+  .print-photos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+  .print-photo-col h4 {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    padding: 4px 8px;
+    background: var(--bg);
+    border-radius: 6px;
+  }
+  .print-photo-col img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    border: 1px solid var(--border);
+  }
+  .print-sigs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .sig-box { text-align: center; }
+  .sig-box canvas, .sig-box img {
+    border-bottom: 1.5px solid var(--text);
+    width: 100%;
+    max-height: 90px;
+    object-fit: contain;
+  }
+  .sig-box .sig-name { font-size: 13px; margin-top: 6px; }
+  .sig-box .sig-role { font-size: 11px; color: var(--text-light); }
+
+  /* ── TOAST ─────────────────────────────── */
+  #toastContainer {
+    position: fixed;
+    top: 20px; right: 20px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .toast {
+    background: var(--card);
+    border-radius: 10px;
+    padding: 12px 16px;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    min-width: 260px;
+    border-left: 4px solid var(--primary);
+    animation: slideIn .3s ease;
+  }
+  .toast.success { border-color: var(--success); }
+  .toast.danger { border-color: var(--danger); }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(60px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* ── MISC ─────────────────────────────── */
+  .flex { display: flex; }
+  .items-center { align-items: center; }
+  .gap-2 { gap: 8px; }
+  .gap-3 { gap: 12px; }
+  .justify-between { justify-content: space-between; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .mt-1 { margin-top: 4px; }
+  .mt-2 { margin-top: 8px; }
+  .mt-3 { margin-top: 12px; }
+  .mt-4 { margin-top: 16px; }
+  .mb-2 { margin-bottom: 8px; }
+  .mb-3 { margin-bottom: 12px; }
+  .text-sm { font-size: 13px; }
+  .text-light { color: var(--text-light); }
+  .text-muted { color: var(--text-muted); }
+  .font-bold { font-weight: 700; }
+  .hidden { display: none !important; }
+  .section { display: none; }
+  .section.active { display: block; }
+  .empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--text-muted);
+  }
+  .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-state p { font-size: 15px; }
+
+  hr.divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+  .status-steps {
+    display: flex;
+    gap: 0;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .status-step {
+    flex: 1;
+    padding: 10px 8px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    background: var(--bg);
+    color: var(--text-muted);
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+  .status-step:last-child { border-right: none; }
+  .status-step.done { background: var(--success); color: #fff; }
+  .status-step.current { background: var(--primary); color: #fff; }
+
+  .info-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  .info-row .label { color: var(--text-light); width: 130px; flex-shrink: 0; font-weight: 500; }
+  .info-row .value { color: var(--text); font-weight: 500; }
+
+  @media print {
+    body { background: #fff; }
+    #app { display: none; }
+    #printArea { display: block !important; padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="toastContainer"></div>
+
+<!-- ══ LOGIN SCREEN ══════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="icon">🔧</div>
+      <h1>ระบบแจ้งซ่อม</h1>
+      <p>Maintenance Request System</p>
+    </div>
+    <div class="login-tabs">
+      <button class="login-tab active" onclick="switchTab('user')">👤 ผู้แจ้งซ่อม</button>
+      <button class="login-tab" onclick="switchTab('tech')">🔧 ช่างซ่อม</button>
+      <button class="login-tab" onclick="switchTab('admin')">⚙️ Admin</button>
+    </div>
+    <div id="loginUser">
+      <div class="form-group">
+        <label class="form-label">ชื่อ-นามสกุล</label>
+        <input class="form-input" id="userNameInput" type="text" placeholder="กรอกชื่อของคุณ">
+      </div>
+      <div class="form-group">
+        <label class="form-label">แผนก / ห้อง</label>
+        <input class="form-input" id="userDeptInput" type="text" placeholder="เช่น ห้องบัญชี, แผนกไอที">
+      </div>
+      <button class="btn btn-primary btn-block" onclick="loginUser()">เข้าสู่ระบบ</button>
+    </div>
+    <div id="loginTech" class="hidden">
+      <div class="form-group">
+        <label class="form-label">เลือกช่างซ่อม</label>
+        <select class="form-select" id="techSelect">
+          <option value="">-- เลือกช่าง --</option>
+          <option value="ช่างสมชาย">ช่างสมชาย</option>
+          <option value="ช่างวิชัย">ช่างวิชัย</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">รหัสผ่าน</label>
+        <input class="form-input" id="techPassInput" type="password" placeholder="รหัสผ่านช่าง">
+      </div>
+      <button class="btn btn-primary btn-block" onclick="loginTech()">เข้าสู่ระบบ</button>
+    </div>
+    <div id="loginAdmin" class="hidden">
+      <div class="form-group">
+        <label class="form-label">รหัสผ่าน Admin</label>
+        <input class="form-input" id="adminPassInput" type="password" placeholder="รหัสผ่าน Admin">
+      </div>
+      <button class="btn btn-primary btn-block" onclick="loginAdmin()">เข้าสู่ระบบ</button>
+    </div>
+    <p class="text-sm text-muted mt-3" style="text-align:center">รหัสช่าง: <b>1234</b> | รหัส Admin: <b>admin123</b></p>
+  </div>
+</div>
+
+<!-- ══ APP ══════════════════════════════════════════ -->
+<div id="app" class="hidden">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">🔧 ระบบแจ้งซ่อม</div>
+      <div class="sidebar-sub">Maintenance System</div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-chip">
+        <div class="user-avatar" id="sidebarAvatar">U</div>
+        <div>
+          <div class="user-name" id="sidebarName">ผู้ใช้งาน</div>
+          <div class="user-role" id="sidebarRole">ผู้แจ้งซ่อม</div>
+        </div>
+      </div>
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+    <div class="sidebar-footer">
+      <button class="nav-item" onclick="logout()" style="color:#ef4444">
+        <span class="nav-icon">🚪</span> ออกจากระบบ
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbarTitle">หน้าหลัก</div>
+      <div class="topbar-actions" id="topbarActions"></div>
+    </div>
+    <div class="content">
+
+      <!-- Section: Dashboard -->
+      <div class="section" id="secDashboard">
+        <div class="stats-grid" id="statsGrid"></div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">รายการแจ้งซ่อมล่าสุด</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>รหัส</th><th>เรื่อง</th><th>ผู้แจ้ง</th><th>วันที่</th><th>สถานะ</th><th>ช่างที่รับงาน</th>
+                </tr>
+              </thead>
+              <tbody id="dashboardTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: แจ้งซ่อม -->
+      <div class="section" id="secNew">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📋 แบบฟอร์มแจ้งซ่อม</span>
+          </div>
+          <div class="card-body">
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">ชื่อผู้แจ้ง</label>
+                <input class="form-input" id="newReqName" type="text" readonly>
+              </div>
+              <div class="form-group">
+                <label class="form-label">แผนก / ห้อง</label>
+                <input class="form-input" id="newReqDept" type="text" readonly>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">หัวข้อการแจ้งซ่อม</label>
+              <input class="form-input" id="newReqTitle" type="text" placeholder="ระบุหัวข้อ เช่น เครื่องแอร์ไม่เย็น">
+            </div>
+            <div class="form-group">
+              <label class="form-label">ประเภทงาน</label>
+              <select class="form-select" id="newReqType">
+                <option>ไฟฟ้า</option>
+                <option>ประปา / ท่อ</option>
+                <option>แอร์ / ระบบทำความเย็น</option>
+                <option>เฟอร์นิเจอร์ / โครงสร้าง</option>
+                <option>อื่นๆ</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">รายละเอียด</label>
+              <textarea class="form-textarea" id="newReqDetail" placeholder="อธิบายปัญหาที่พบ..."></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">ความเร่งด่วน</label>
+              <select class="form-select" id="newReqPriority">
+                <option value="ปกติ">ปกติ</option>
+                <option value="เร่งด่วน">เร่งด่วน</option>
+                <option value="วิกฤต">วิกฤต</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">แนบรูปภาพก่อนซ่อม</label>
+              <div class="img-upload-area" id="uploadBefore" onclick="document.getElementById('fileInputBefore').click()">
+                <div class="upload-icon">📷</div>
+                <p>คลิกหรือลากวางรูปภาพที่นี่</p>
+                <small>รองรับ JPG, PNG, GIF (หลายไฟล์)</small>
+              </div>
+              <input type="file" id="fileInputBefore" multiple accept="image/*" class="hidden" onchange="previewImages(this,'previewBefore','photosBefore')">
+              <div class="img-preview-grid" id="previewBefore"></div>
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px">
+              <button class="btn btn-secondary" onclick="clearNewForm()">ล้างข้อมูล</button>
+              <button class="btn btn-primary" onclick="submitRequest()">📨 ส่งแจ้งซ่อม</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: รายการซ่อม (ผู้แจ้ง) -->
+      <div class="section" id="secMyRequests">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">รายการแจ้งซ่อมของฉัน</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>รหัส</th><th>หัวข้อ</th><th>ประเภท</th><th>วันที่</th><th>สถานะ</th><th>ช่าง</th><th>จัดการ</th>
+                </tr>
+              </thead>
+              <tbody id="myRequestsTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: งานของช่าง -->
+      <div class="section" id="secMyJobs">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">งานที่ได้รับมอบหมาย</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>รหัส</th><th>หัวข้อ</th><th>ผู้แจ้ง/แผนก</th><th>ประเภท</th><th>ความเร่งด่วน</th><th>สถานะ</th><th>จัดการ</th>
+                </tr>
+              </thead>
+              <tbody id="myJobsTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: จัดการทั้งหมด (Admin) -->
+      <div class="section" id="secAllRequests">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">จัดการใบแจ้งซ่อมทั้งหมด</span>
+            <div class="flex gap-2">
+              <select class="form-select" id="filterStatus" style="width:160px;padding:7px 12px;font-size:13px" onchange="renderAllTable()">
+                <option value="">ทุกสถานะ</option>
+                <option value="รอดำเนินการ">รอดำเนินการ</option>
+                <option value="มอบหมายแล้ว">มอบหมายแล้ว</option>
+                <option value="กำลังซ่อม">กำลังซ่อม</option>
+                <option value="ซ่อมเสร็จ">ซ่อมเสร็จ</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>รหัส</th><th>หัวข้อ</th><th>ผู้แจ้ง</th><th>แผนก</th><th>วันที่</th><th>ความเร่งด่วน</th><th>สถานะ</th><th>ช่าง</th><th>จัดการ</th>
+                </tr>
+              </thead>
+              <tbody id="allRequestsTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODALS ══════════════════════════════════════════ -->
+
+<!-- Modal: รายละเอียดใบแจ้งซ่อม -->
+<div class="modal-overlay" id="modalDetail">
+  <div class="modal" style="max-width:780px">
+    <div class="modal-header">
+      <span class="modal-title">📋 รายละเอียดใบแจ้งซ่อม</span>
+      <button class="modal-close" onclick="closeModal('modalDetail')">✕</button>
+    </div>
+    <div class="modal-body" id="modalDetailBody"></div>
+    <div class="modal-footer" id="modalDetailFooter"></div>
+  </div>
+</div>
+
+<!-- Modal: มอบหมายช่าง -->
+<div class="modal-overlay" id="modalAssign">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-header">
+      <span class="modal-title">👷 มอบหมายช่าง</span>
+      <button class="modal-close" onclick="closeModal('modalAssign')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">เลือกช่างซ่อม</label>
+        <select class="form-select" id="assignTechSelect">
+          <option value="ช่างสมชาย">ช่างสมชาย</option>
+          <option value="ช่างวิชัย">ช่างวิชัย</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">หมายเหตุสำหรับช่าง</label>
+        <textarea class="form-textarea" id="assignNote" placeholder="คำแนะนำหรือรายละเอียดเพิ่มเติม..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalAssign')">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="confirmAssign()">✅ มอบหมาย</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: ซ่อมเสร็จ (ช่าง) -->
+<div class="modal-overlay" id="modalComplete">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-header">
+      <span class="modal-title">✅ บันทึกผลการซ่อม</span>
+      <button class="modal-close" onclick="closeModal('modalComplete')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">สรุปงานซ่อม</label>
+        <textarea class="form-textarea" id="completeNote" placeholder="อธิบายสิ่งที่ดำเนินการ..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">แนบรูปภาพหลังซ่อม</label>
+        <div class="img-upload-area" onclick="document.getElementById('fileInputAfter').click()">
+          <div class="upload-icon">📷</div>
+          <p>คลิกหรือลากวางรูปภาพ</p>
+        </div>
+        <input type="file" id="fileInputAfter" multiple accept="image/*" class="hidden" onchange="previewImages(this,'previewAfter','photosAfter')">
+        <div class="img-preview-grid" id="previewAfter"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ลายเซ็นช่าง</label>
+        <div class="sig-pad-wrap">
+          <canvas id="sigTech" height="100"></canvas>
+          <button class="sig-clear" onclick="clearSig('sigTech')">ล้าง</button>
+          <div class="sig-pad-label">เซ็นชื่อในกรอบด้านบน</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalComplete')">ยกเลิก</button>
+      <button class="btn btn-success" onclick="confirmComplete()">✅ บันทึกซ่อมเสร็จ</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: พิมพ์ใบแจ้งซ่อม -->
+<div class="modal-overlay" id="modalPrint">
+  <div class="modal" style="max-width:860px">
+    <div class="modal-header">
+      <span class="modal-title">🖨️ ใบแจ้งซ่อม</span>
+      <button class="modal-close" onclick="closeModal('modalPrint')">✕</button>
+    </div>
+    <div class="modal-body" id="modalPrintBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalPrint')">ปิด</button>
+      <button class="btn btn-primary" onclick="doPrint()">🖨️ พิมพ์</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: เซ็นผู้แจ้ง -->
+<div class="modal-overlay" id="modalSign">
+  <div class="modal" style="max-width:460px">
+    <div class="modal-header">
+      <span class="modal-title">✍️ ลายเซ็นผู้แจ้งซ่อม</span>
+      <button class="modal-close" onclick="closeModal('modalSign')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="text-sm text-light mb-3">กรุณาเซ็นชื่อรับรองว่างานซ่อมเสร็จเรียบร้อย</p>
+      <div class="sig-pad-wrap">
+        <canvas id="sigUser" height="120"></canvas>
+        <button class="sig-clear" onclick="clearSig('sigUser')">ล้าง</button>
+        <div class="sig-pad-label">เซ็นชื่อในกรอบด้านบน</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalSign')">ยกเลิก</button>
+      <button class="btn btn-success" onclick="confirmSign()">✅ ยืนยันลายเซ็น</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════
+let currentUser = null;
+let requests = JSON.parse(localStorage.getItem('repairRequests') || '[]');
+let activeTab = 'loginUser';
+let currentAssignId = null;
+let currentCompleteId = null;
+let currentSignId = null;
+let photosBefore = [];
+let photosAfter = [];
+let sigPads = {};
+let printData = null;
+
+const TECHS = ['ช่างสมชาย', 'ช่างวิชัย'];
+
+function saveData() {
+  localStorage.setItem('repairRequests', JSON.stringify(requests));
+}
+
+function genId() {
+  const d = new Date();
+  return 'REP' + d.getFullYear().toString().slice(-2) +
+    String(d.getMonth()+1).padStart(2,'0') +
+    String(d.getDate()).padStart(2,'0') + '-' +
+    String(Math.floor(Math.random()*999)+1).padStart(3,'0');
+}
+
+function formatDate(d) {
+  if (!d) return '-';
+  const dt = new Date(d);
+  return dt.toLocaleDateString('th-TH', {day:'2-digit',month:'2-digit',year:'numeric'}) +
+    ' ' + dt.toLocaleTimeString('th-TH', {hour:'2-digit',minute:'2-digit'});
+}
+
+// ══════════════════════════════════════════════════════
+//  LOGIN
+// ══════════════════════════════════════════════════════
+function switchTab(tab) {
+  document.querySelectorAll('.login-tab').forEach((b,i) => b.classList.toggle('active', ['user','tech','admin'][i] === tab));
+  document.getElementById('loginUser').classList.toggle('hidden', tab !== 'user');
+  document.getElementById('loginTech').classList.toggle('hidden', tab !== 'tech');
+  document.getElementById('loginAdmin').classList.toggle('hidden', tab !== 'admin');
+}
+
+function loginUser() {
+  const name = document.getElementById('userNameInput').value.trim();
+  const dept = document.getElementById('userDeptInput').value.trim();
+  if (!name) return toast('กรุณากรอกชื่อ', 'danger');
+  currentUser = { type: 'user', name, dept: dept || 'ไม่ระบุ' };
+  initApp();
+}
+
+function loginTech() {
+  const tech = document.getElementById('techSelect').value;
+  const pass = document.getElementById('techPassInput').value;
+  if (!tech) return toast('กรุณาเลือกช่าง', 'danger');
+  if (pass !== '1234') return toast('รหัสผ่านไม่ถูกต้อง', 'danger');
+  currentUser = { type: 'tech', name: tech };
+  initApp();
+}
+
+function loginAdmin() {
+  const pass = document.getElementById('adminPassInput').value;
+  if (pass !== 'admin123') return toast('รหัสผ่านไม่ถูกต้อง', 'danger');
+  currentUser = { type: 'admin', name: 'Admin (หัวหน้าช่าง)' };
+  initApp();
+}
+
+function logout() {
+  currentUser = null;
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('adminPassInput').value = '';
+}
+
+// ══════════════════════════════════════════════════════
+//  APP INIT
+// ══════════════════════════════════════════════════════
+function initApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').classList.remove('hidden');
+
+  // Sidebar info
+  document.getElementById('sidebarAvatar').textContent = currentUser.name[0];
+  document.getElementById('sidebarName').textContent = currentUser.name;
+  document.getElementById('sidebarRole').textContent =
+    currentUser.type === 'admin' ? 'หัวหน้าช่าง (Admin)' :
+    currentUser.type === 'tech' ? 'ช่างซ่อม' : 'ผู้แจ้งซ่อม';
+
+  buildNav();
+  if (currentUser.type === 'user') {
+    document.getElementById('newReqName').value = currentUser.name;
+    document.getElementById('newReqDept').value = currentUser.dept;
+    navigate('secNew');
+  } else if (currentUser.type === 'tech') {
+    navigate('secMyJobs');
+  } else {
+    navigate('secDashboard');
+  }
+}
+
+function buildNav() {
+  const nav = document.getElementById('sidebarNav');
+  nav.innerHTML = '';
+  const items =
+    currentUser.type === 'user' ? [
+      { id:'secNew', icon:'📋', label:'แจ้งซ่อม' },
+      { id:'secMyRequests', icon:'📂', label:'รายการของฉัน' },
+    ] :
+    currentUser.type === 'tech' ? [
+      { id:'secMyJobs', icon:'🔧', label:'งานของฉัน' },
+    ] : [
+      { id:'secDashboard', icon:'📊', label:'ภาพรวม' },
+      { id:'secAllRequests', icon:'📋', label:'ใบแจ้งซ่อมทั้งหมด' },
+    ];
+  items.forEach(item => {
+    const btn = document.createElement('button');
+    btn.className = 'nav-item';
+    btn.id = 'nav_' + item.id;
+    btn.innerHTML = `<span class="nav-icon">${item.icon}</span>${item.label}`;
+    btn.onclick = () => navigate(item.id);
+    nav.appendChild(btn);
+  });
+}
+
+function navigate(secId) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const sec = document.getElementById(secId);
+  if (sec) sec.classList.add('active');
+  const nav = document.getElementById('nav_' + secId);
+  if (nav) nav.classList.add('active');
+  const titles = {
+    secDashboard:'📊 ภาพรวม',
+    secNew:'📋 แจ้งซ่อมใหม่',
+    secMyRequests:'📂 รายการของฉัน',
+    secMyJobs:'🔧 งานของฉัน',
+    secAllRequests:'📋 ใบแจ้งซ่อมทั้งหมด',
+  };
+  document.getElementById('topbarTitle').textContent = titles[secId] || '';
+  const actions = document.getElementById('topbarActions');
+  actions.innerHTML = '';
+  if (secId === 'secNew') {
+    const btn = document.createElement('button');
+    btn.className = 'btn btn-secondary btn-sm';
+    btn.innerHTML = '🔄 ล้างแบบฟอร์ม';
+    btn.onclick = clearNewForm;
+    actions.appendChild(btn);
+  }
+  if (secId === 'secDashboard') renderDashboard();
+  if (secId === 'secMyRequests') renderMyRequests();
+  if (secId === 'secMyJobs') renderMyJobs();
+  if (secId === 'secAllRequests') renderAllTable();
+}
+
+// ══════════════════════════════════════════════════════
+//  IMAGE UPLOAD
+// ══════════════════════════════════════════════════════
+function previewImages(input, previewId, storeVar) {
+  const files = Array.from(input.files);
+  if (!files.length) return;
+  const previewEl = document.getElementById(previewId);
+  const store = storeVar === 'photosBefore' ? photosBefore : photosAfter;
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      store.push(e.target.result);
+      const item = document.createElement('div');
+      item.className = 'img-preview-item';
+      const idx = store.length - 1;
+      item.innerHTML = `<img src="${e.target.result}"><button class="remove-img" onclick="removeImg(${idx},'${previewId}','${storeVar}',this.parentElement)">✕</button>`;
+      previewEl.appendChild(item);
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
+}
+
+function removeImg(idx, previewId, storeVar, el) {
+  const store = storeVar === 'photosBefore' ? photosBefore : photosAfter;
+  store.splice(idx, 1);
+  el.remove();
+  // re-index
+  const previewEl = document.getElementById(previewId);
+  Array.from(previewEl.children).forEach((item, i) => {
+    const btn = item.querySelector('.remove-img');
+    if (btn) btn.setAttribute('onclick', `removeImg(${i},'${previewId}','${storeVar}',this.parentElement)`);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  SUBMIT REQUEST
+// ══════════════════════════════════════════════════════
+function submitRequest() {
+  const title = document.getElementById('newReqTitle').value.trim();
+  const detail = document.getElementById('newReqDetail').value.trim();
+  const type = document.getElementById('newReqType').value;
+  const priority = document.getElementById('newReqPriority').value;
+  if (!title) return toast('กรุณาระบุหัวข้อการแจ้งซ่อม', 'danger');
+  if (!detail) return toast('กรุณาอธิบายรายละเอียด', 'danger');
+
+  const req = {
+    id: genId(),
+    title, detail, type, priority,
+    requester: currentUser.name,
+    dept: currentUser.dept,
+    status: 'รอดำเนินการ',
+    assignedTo: null,
+    assignNote: '',
+    completeNote: '',
+    createdAt: new Date().toISOString(),
+    completedAt: null,
+    photosBefore: [...photosBefore],
+    photosAfter: [],
+    sigTech: null,
+    sigUser: null,
+  };
+  requests.unshift(req);
+  saveData();
+  clearNewForm();
+  toast(`ส่งแจ้งซ่อม ${req.id} เรียบร้อย`, 'success');
+  navigate('secMyRequests');
+}
+
+function clearNewForm() {
+  document.getElementById('newReqTitle').value = '';
+  document.getElementById('newReqDetail').value = '';
+  document.getElementById('newReqType').selectedIndex = 0;
+  document.getElementById('newReqPriority').selectedIndex = 0;
+  photosBefore = [];
+  document.getElementById('previewBefore').innerHTML = '';
+}
+
+// ══════════════════════════════════════════════════════
+//  STATUS BADGE
+// ══════════════════════════════════════════════════════
+function statusBadge(s) {
+  const map = {
+    'รอดำเนินการ': 'badge-pending',
+    'มอบหมายแล้ว': 'badge-assigned',
+    'กำลังซ่อม': 'badge-progress',
+    'ซ่อมเสร็จ': 'badge-done',
+    'ยกเลิก': 'badge-cancel',
+  };
+  return `<span class="badge ${map[s]||''}">${s}</span>`;
+}
+
+function priorityBadge(p) {
+  const map = { 'ปกติ':'#94a3b8', 'เร่งด่วน':'#f59e0b', 'วิกฤต':'#ef4444' };
+  return `<span style="color:${map[p]};font-weight:700;font-size:13px">${p==='วิกฤต'?'🔴':'p'==='เร่งด่วน'?'🟡':'⚪'} ${p}</span>`;
+}
+
+// ══════════════════════════════════════════════════════
+//  DASHBOARD
+// ══════════════════════════════════════════════════════
+function renderDashboard() {
+  const total = requests.length;
+  const pending = requests.filter(r => r.status === 'รอดำเนินการ').length;
+  const progress = requests.filter(r => r.status === 'กำลังซ่อม' || r.status === 'มอบหมายแล้ว').length;
+  const done = requests.filter(r => r.status === 'ซ่อมเสร็จ').length;
+
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-card"><div class="stat-icon blue">📋</div><div><div class="stat-num">${total}</div><div class="stat-label">ทั้งหมด</div></div></div>
+    <div class="stat-card"><div class="stat-icon yellow">⏳</div><div><div class="stat-num">${pending}</div><div class="stat-label">รอดำเนินการ</div></div></div>
+    <div class="stat-card"><div class="stat-icon blue">🔧</div><div><div class="stat-num">${progress}</div><div class="stat-label">กำลังซ่อม</div></div></div>
+    <div class="stat-card"><div class="stat-icon green">✅</div><div><div class="stat-num">${done}</div><div class="stat-label">ซ่อมเสร็จ</div></div></div>
+  `;
+
+  const tbody = document.getElementById('dashboardTable');
+  if (!requests.length) {
+    tbody.innerHTML = `<tr><td colspan="6" class="empty-state"><div class="empty-icon">📭</div><p>ยังไม่มีรายการแจ้งซ่อม</p></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = requests.slice(0,10).map(r => `
+    <tr>
+      <td><b style="font-size:12px;color:var(--text-light)">${r.id}</b></td>
+      <td><b>${r.title}</b></td>
+      <td>${r.requester}</td>
+      <td style="font-size:13px;color:var(--text-light)">${formatDate(r.createdAt)}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td>${r.assignedTo || '<span class="text-muted">-</span>'}</td>
+    </tr>
+  `).join('');
+}
+
+// ══════════════════════════════════════════════════════
+//  MY REQUESTS (user)
+// ══════════════════════════════════════════════════════
+function renderMyRequests() {
+  const mine = requests.filter(r => r.requester === currentUser.name);
+  const tbody = document.getElementById('myRequestsTable');
+  if (!mine.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">📭</div><p>ยังไม่มีรายการแจ้งซ่อม</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = mine.map(r => `
+    <tr>
+      <td><b style="font-size:12px;color:var(--text-light)">${r.id}</b></td>
+      <td><b>${r.title}</b></td>
+      <td><span class="badge badge-assigned" style="background:#f1f5f9;color:#475569">${r.type}</span></td>
+      <td style="font-size:13px;color:var(--text-light)">${formatDate(r.createdAt)}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td>${r.assignedTo || '<span class="text-muted">-</span>'}</td>
+      <td>
+        <div class="flex gap-2">
+          <button class="btn btn-secondary btn-sm" onclick="viewDetail('${r.id}','user')">👁 ดู</button>
+          ${r.status === 'ซ่อมเสร็จ' && !r.sigUser ? `<button class="btn btn-success btn-sm" onclick="openSign('${r.id}')">✍️ เซ็น</button>` : ''}
+          ${r.status === 'ซ่อมเสร็จ' ? `<button class="btn btn-primary btn-sm" onclick="openPrint('${r.id}')">🖨️ พิมพ์</button>` : ''}
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// ══════════════════════════════════════════════════════
+//  MY JOBS (tech)
+// ══════════════════════════════════════════════════════
+function renderMyJobs() {
+  const mine = requests.filter(r => r.assignedTo === currentUser.name && r.status !== 'ซ่อมเสร็จ');
+  const done = requests.filter(r => r.assignedTo === currentUser.name && r.status === 'ซ่อมเสร็จ');
+  const all = [...mine, ...done];
+  const tbody = document.getElementById('myJobsTable');
+  if (!all.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">🎉</div><p>ยังไม่มีงานที่ได้รับมอบหมาย</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = all.map(r => `
+    <tr>
+      <td><b style="font-size:12px;color:var(--text-light)">${r.id}</b></td>
+      <td><b>${r.title}</b></td>
+      <td>${r.requester}<br><span class="text-sm text-light">${r.dept}</span></td>
+      <td>${r.type}</td>
+      <td>${priorityBadge(r.priority)}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td>
+        <div class="flex gap-2">
+          <button class="btn btn-secondary btn-sm" onclick="viewDetail('${r.id}','tech')">👁 ดู</button>
+          ${r.status === 'มอบหมายแล้ว' ? `<button class="btn btn-warning btn-sm" onclick="startJob('${r.id}')">▶ รับงาน</button>` : ''}
+          ${r.status === 'กำลังซ่อม' ? `<button class="btn btn-success btn-sm" onclick="openComplete('${r.id}')">✅ ซ่อมเสร็จ</button>` : ''}
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// ══════════════════════════════════════════════════════
+//  ALL REQUESTS (admin)
+// ══════════════════════════════════════════════════════
+function renderAllTable() {
+  const filter = document.getElementById('filterStatus')?.value || '';
+  const list = filter ? requests.filter(r => r.status === filter) : requests;
+  const tbody = document.getElementById('allRequestsTable');
+  if (!list.length) {
+    tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state"><div class="empty-icon">📭</div><p>ไม่มีรายการ</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = list.map(r => `
+    <tr>
+      <td><b style="font-size:12px;color:var(--text-light)">${r.id}</b></td>
+      <td><b>${r.title}</b><br><span class="text-sm text-light">${r.type}</span></td>
+      <td>${r.requester}</td>
+      <td>${r.dept}</td>
+      <td style="font-size:12px;color:var(--text-light)">${formatDate(r.createdAt)}</td>
+      <td>${priorityBadge(r.priority)}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td>${r.assignedTo || '<span class="text-muted">ยังไม่มอบหมาย</span>'}</td>
+      <td>
+        <div class="flex gap-2">
+          <button class="btn btn-secondary btn-sm" onclick="viewDetail('${r.id}','admin')">👁 ดู</button>
+          ${r.status === 'รอดำเนินการ' ? `<button class="btn btn-primary btn-sm" onclick="openAssign('${r.id}')">👷 มอบหมาย</button>` : ''}
+          ${r.status === 'ซ่อมเสร็จ' ? `<button class="btn btn-primary btn-sm" onclick="openPrint('${r.id}')">🖨️ พิมพ์</button>` : ''}
+          <button class="btn btn-danger btn-sm" onclick="deleteRequest('${r.id}')">🗑</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// ══════════════════════════════════════════════════════
+//  VIEW DETAIL
+// ══════════════════════════════════════════════════════
+function viewDetail(id, role) {
+  const r = requests.find(x => x.id === id);
+  if (!r) return;
+
+  const steps = ['รอดำเนินการ','มอบหมายแล้ว','กำลังซ่อม','ซ่อมเสร็จ'];
+  const curStep = steps.indexOf(r.status);
+
+  let beforePhotos = r.photosBefore.length
+    ? r.photosBefore.map(p => `<img src="${p}" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-bottom:6px;border:1px solid var(--border)">`).join('')
+    : '<p class="text-muted text-sm">ไม่มีรูปก่อนซ่อม</p>';
+  let afterPhotos = r.photosAfter.length
+    ? r.photosAfter.map(p => `<img src="${p}" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-bottom:6px;border:1px solid var(--border)">`).join('')
+    : '<p class="text-muted text-sm">ยังไม่มีรูปหลังซ่อม</p>';
+
+  document.getElementById('modalDetailBody').innerHTML = `
+    <div class="status-steps">
+      ${steps.map((s,i) => `<div class="status-step ${i < curStep ? 'done' : i === curStep ? 'current' : ''}">${s}</div>`).join('')}
+    </div>
+    <div class="grid-2" style="gap:8px 24px;margin-bottom:16px">
+      <div class="info-row"><span class="label">รหัสใบแจ้งซ่อม</span><span class="value font-bold">${r.id}</span></div>
+      <div class="info-row"><span class="label">สถานะ</span><span class="value">${statusBadge(r.status)}</span></div>
+      <div class="info-row"><span class="label">ผู้แจ้ง</span><span class="value">${r.requester}</span></div>
+      <div class="info-row"><span class="label">แผนก</span><span class="value">${r.dept}</span></div>
+      <div class="info-row"><span class="label">ประเภทงาน</span><span class="value">${r.type}</span></div>
+      <div class="info-row"><span class="label">ความเร่งด่วน</span><span class="value">${priorityBadge(r.priority)}</span></div>
+      <div class="info-row"><span class="label">วันที่แจ้ง</span><span class="value">${formatDate(r.createdAt)}</span></div>
+      <div class="info-row"><span class="label">ช่างที่รับงาน</span><span class="value">${r.assignedTo || '-'}</span></div>
+    </div>
+    <div class="info-row" style="flex-direction:column;gap:4px;margin-bottom:12px">
+      <span class="label">รายละเอียด</span>
+      <span class="value" style="background:var(--bg);padding:10px 12px;border-radius:8px;font-size:14px">${r.detail}</span>
+    </div>
+    ${r.assignNote ? `<div class="info-row" style="flex-direction:column;gap:4px;margin-bottom:12px"><span class="label">หมายเหตุจาก Admin</span><span class="value" style="background:#fef3c7;padding:10px 12px;border-radius:8px;font-size:14px">${r.assignNote}</span></div>` : ''}
+    ${r.completeNote ? `<div class="info-row" style="flex-direction:column;gap:4px;margin-bottom:12px"><span class="label">สรุปงานซ่อม</span><span class="value" style="background:#d1fae5;padding:10px 12px;border-radius:8px;font-size:14px">${r.completeNote}</span></div>` : ''}
+    <div class="grid-2" style="gap:16px;margin-top:16px">
+      <div>
+        <h4 style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--text-light)">📸 รูปก่อนซ่อม</h4>
+        ${beforePhotos}
+      </div>
+      <div>
+        <h4 style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--text-light)">📸 รูปหลังซ่อม</h4>
+        ${afterPhotos}
+      </div>
+    </div>
+  `;
+
+  const footer = document.getElementById('modalDetailFooter');
+  footer.innerHTML = '';
+  if (role === 'admin') {
+    if (r.status === 'รอดำเนินการ') {
+      footer.innerHTML += `<button class="btn btn-primary" onclick="closeModal('modalDetail');openAssign('${r.id}')">👷 มอบหมายช่าง</button>`;
+    }
+    if (r.status === 'ซ่อมเสร็จ') {
+      footer.innerHTML += `<button class="btn btn-primary" onclick="closeModal('modalDetail');openPrint('${r.id}')">🖨️ พิมพ์ใบแจ้งซ่อม</button>`;
+    }
+    footer.innerHTML += `<button class="btn btn-danger" onclick="deleteRequest('${r.id}');closeModal('modalDetail')">🗑️ ลบ</button>`;
+  }
+  if (role === 'user' && r.status === 'ซ่อมเสร็จ') {
+    if (!r.sigUser) footer.innerHTML += `<button class="btn btn-success" onclick="closeModal('modalDetail');openSign('${r.id}')">✍️ เซ็นชื่อรับงาน</button>`;
+    footer.innerHTML += `<button class="btn btn-primary" onclick="closeModal('modalDetail');openPrint('${r.id}')">🖨️ พิมพ์ใบแจ้งซ่อม</button>`;
+  }
+  footer.innerHTML += `<button class="btn btn-secondary" onclick="closeModal('modalDetail')">ปิด</button>`;
+
+  openModal('modalDetail');
+}
+
+// ══════════════════════════════════════════════════════
+//  ASSIGN
+// ══════════════════════════════════════════════════════
+function openAssign(id) {
+  currentAssignId = id;
+  document.getElementById('assignNote').value = '';
+  openModal('modalAssign');
+}
+
+function confirmAssign() {
+  const r = requests.find(x => x.id === currentAssignId);
+  if (!r) return;
+  r.assignedTo = document.getElementById('assignTechSelect').value;
+  r.assignNote = document.getElementById('assignNote').value;
+  r.status = 'มอบหมายแล้ว';
+  saveData();
+  closeModal('modalAssign');
+  renderAllTable();
+  toast(`มอบหมายงาน ${r.id} ให้ ${r.assignedTo} แล้ว`, 'success');
+}
+
+function startJob(id) {
+  const r = requests.find(x => x.id === id);
+  if (!r) return;
+  r.status = 'กำลังซ่อม';
+  saveData();
+  renderMyJobs();
+  toast('เริ่มรับงานแล้ว', 'success');
+}
+
+// ══════════════════════════════════════════════════════
+//  COMPLETE
+// ══════════════════════════════════════════════════════
+function openComplete(id) {
+  currentCompleteId = id;
+  photosAfter = [];
+  document.getElementById('previewAfter').innerHTML = '';
+  document.getElementById('completeNote').value = '';
+  openModal('modalComplete');
+  setTimeout(() => initSigPad('sigTech'), 100);
+}
+
+function confirmComplete() {
+  const r = requests.find(x => x.id === currentCompleteId);
+  if (!r) return;
+  const note = document.getElementById('completeNote').value.trim();
+  if (!note) return toast('กรุณาสรุปงานซ่อม', 'danger');
+  r.completeNote = note;
+  r.photosAfter = [...photosAfter];
+  r.sigTech = getSigData('sigTech');
+  r.status = 'ซ่อมเสร็จ';
+  r.completedAt = new Date().toISOString();
+  saveData();
+  closeModal('modalComplete');
+  renderMyJobs();
+  toast('บันทึกซ่อมเสร็จเรียบร้อย ✅', 'success');
+}
+
+// ══════════════════════════════════════════════════════
+//  SIGN (user)
+// ══════════════════════════════════════════════════════
+function openSign(id) {
+  currentSignId = id;
+  openModal('modalSign');
+  setTimeout(() => initSigPad('sigUser'), 100);
+}
+
+function confirmSign() {
+  const r = requests.find(x => x.id === currentSignId);
+  if (!r) return;
+  r.sigUser = getSigData('sigUser');
+  saveData();
+  closeModal('modalSign');
+  renderMyRequests();
+  toast('เซ็นชื่อเรียบร้อย ✍️', 'success');
+}
+
+// ══════════════════════════════════════════════════════
+//  DELETE
+// ══════════════════════════════════════════════════════
+function deleteRequest(id) {
+  if (!confirm('ยืนยันการลบใบแจ้งซ่อม ' + id + '?')) return;
+  requests = requests.filter(r => r.id !== id);
+  saveData();
+  renderAllTable();
+  renderDashboard();
+  toast('ลบรายการแล้ว', 'success');
+}
+
+// ══════════════════════════════════════════════════════
+//  PRINT
+// ══════════════════════════════════════════════════════
+function openPrint(id) {
+  const r = requests.find(x => x.id === id);
+  if (!r) return;
+  printData = r;
+
+  const beforeImgs = r.photosBefore.length
+    ? r.photosBefore.map(p => `<img src="${p}" style="width:100%;max-height:200px;object-fit:cover;border-radius:8px;margin-bottom:8px;border:1px solid #e2e8f0">`).join('')
+    : '<p style="color:#94a3b8;font-size:13px;padding:12px 0">ไม่มีรูปก่อนซ่อม</p>';
+  const afterImgs = r.photosAfter.length
+    ? r.photosAfter.map(p => `<img src="${p}" style="width:100%;max-height:200px;object-fit:cover;border-radius:8px;margin-bottom:8px;border:1px solid #e2e8f0">`).join('')
+    : '<p style="color:#94a3b8;font-size:13px;padding:12px 0">ไม่มีรูปหลังซ่อม</p>';
+
+  const sigTechHtml = r.sigTech
+    ? `<img src="${r.sigTech}" style="width:100%;max-height:90px;object-fit:contain;border-bottom:1.5px solid #1e293b">`
+    : '<div style="height:70px;border-bottom:1.5px solid #1e293b"></div>';
+  const sigUserHtml = r.sigUser
+    ? `<img src="${r.sigUser}" style="width:100%;max-height:90px;object-fit:contain;border-bottom:1.5px solid #1e293b">`
+    : '<div style="height:70px;border-bottom:1.5px solid #1e293b"></div>';
+
+  document.getElementById('modalPrintBody').innerHTML = `
+    <div class="print-doc" id="printContent">
+      <div class="print-header">
+        <h2>ใบแจ้งซ่อม / Work Order</h2>
+        <p>รหัสใบแจ้งซ่อม: <b>${r.id}</b></p>
+      </div>
+      <div class="print-grid">
+        <div class="print-field"><div class="print-field-label">ผู้แจ้งซ่อม</div><div class="print-field-value">${r.requester}</div></div>
+        <div class="print-field"><div class="print-field-label">แผนก / ห้อง</div><div class="print-field-value">${r.dept}</div></div>
+        <div class="print-field"><div class="print-field-label">วันที่แจ้ง</div><div class="print-field-value">${formatDate(r.createdAt)}</div></div>
+        <div class="print-field"><div class="print-field-label">วันที่ซ่อมเสร็จ</div><div class="print-field-value">${r.completedAt ? formatDate(r.completedAt) : '-'}</div></div>
+        <div class="print-field"><div class="print-field-label">ประเภทงาน</div><div class="print-field-value">${r.type}</div></div>
+        <div class="print-field"><div class="print-field-label">ความเร่งด่วน</div><div class="print-field-value">${r.priority}</div></div>
+        <div class="print-field"><div class="print-field-label">ช่างซ่อม</div><div class="print-field-value">${r.assignedTo || '-'}</div></div>
+        <div class="print-field"><div class="print-field-label">สถานะ</div><div class="print-field-value">${r.status}</div></div>
+      </div>
+      <div style="margin-bottom:12px">
+        <div class="print-field-label">หัวข้อ</div>
+        <div class="print-field-value" style="font-size:16px;font-weight:700;margin-top:2px">${r.title}</div>
+      </div>
+      <div style="margin-bottom:12px">
+        <div class="print-field-label">รายละเอียดปัญหา</div>
+        <div style="background:#f8fafc;border-radius:8px;padding:10px 12px;font-size:14px;margin-top:4px">${r.detail}</div>
+      </div>
+      ${r.completeNote ? `<div style="margin-bottom:12px"><div class="print-field-label">สรุปงานซ่อม</div><div style="background:#f0fdf4;border-radius:8px;padding:10px 12px;font-size:14px;margin-top:4px">${r.completeNote}</div></div>` : ''}
+      <div class="print-photos">
+        <div class="print-photo-col">
+          <h4>📸 รูปก่อนซ่อม</h4>
+          ${beforeImgs}
+        </div>
+        <div class="print-photo-col">
+          <h4>📸 รูปหลังซ่อม</h4>
+          ${afterImgs}
+        </div>
+      </div>
+      <div class="print-sigs">
+        <div class="sig-box">
+          ${sigTechHtml}
+          <div class="sig-name">${r.assignedTo || '......................'}</div>
+          <div class="sig-role">ช่างซ่อม / ผู้ดำเนินการ</div>
+        </div>
+        <div class="sig-box">
+          ${sigUserHtml}
+          <div class="sig-name">${r.requester}</div>
+          <div class="sig-role">ผู้แจ้งซ่อม / ผู้รับมอบงาน</div>
+        </div>
+      </div>
+    </div>
+  `;
+  openModal('modalPrint');
+}
+
+function doPrint() {
+  const content = document.getElementById('printContent').innerHTML;
+  const w = window.open('', '_blank');
+  w.document.write(`
+    <!DOCTYPE html><html><head>
+    <meta charset="UTF-8">
+    <title>ใบแจ้งซ่อม ${printData?.id || ''}</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap');
+      body { font-family: 'Sarabun', sans-serif; padding: 20px; color: #1e293b; }
+      .print-header { text-align:center; margin-bottom:20px; padding-bottom:12px; border-bottom:2px solid #1e293b; }
+      .print-header h2 { font-size:20px; font-weight:700; }
+      .print-header p { font-size:14px; color:#64748b; }
+      .print-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px 16px; margin-bottom:14px; }
+      .print-field-label { color:#64748b; font-size:11px; font-weight:700; text-transform:uppercase; }
+      .print-field-value { font-weight:600; font-size:14px; }
+      .print-photos { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0; }
+      .print-photo-col h4 { font-size:13px; font-weight:700; margin-bottom:8px; background:#f1f5f9; padding:4px 8px; border-radius:6px; }
+      .print-photo-col img { width:100%; max-height:200px; object-fit:cover; border-radius:8px; margin-bottom:6px; border:1px solid #e2e8f0; }
+      .print-sigs { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:24px; padding-top:16px; border-top:1px solid #e2e8f0; }
+      .sig-box { text-align:center; }
+      .sig-box img { width:100%; max-height:90px; object-fit:contain; border-bottom:1.5px solid #1e293b; }
+      .sig-box div[style*='height'] { height:70px; border-bottom:1.5px solid #1e293b; }
+      .sig-name { font-size:14px; margin-top:6px; font-weight:600; }
+      .sig-role { font-size:11px; color:#64748b; }
+    </style>
+    </head><body>${content}</body></html>
+  `);
+  w.document.close();
+  w.focus();
+  setTimeout(() => { w.print(); }, 600);
+}
+
+// ══════════════════════════════════════════════════════
+//  SIGNATURE PAD
+// ══════════════════════════════════════════════════════
+function initSigPad(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  canvas.width = canvas.offsetWidth || 400;
+  canvas.height = canvas.getAttribute('height') || 100;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = '#1e293b';
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  let drawing = false;
+  let lastX = 0, lastY = 0;
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    if (e.touches) {
+      return [(e.touches[0].clientX - rect.left) * scaleX, (e.touches[0].clientY - rect.top) * scaleY];
+    }
+    return [(e.clientX - rect.left) * scaleX, (e.clientY - rect.top) * scaleY];
+  }
+
+  canvas.onmousedown = e => { drawing = true; [lastX, lastY] = getPos(e); };
+  canvas.onmousemove = e => {
+    if (!drawing) return;
+    const [x, y] = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    [lastX, lastY] = [x, y];
+  };
+  canvas.onmouseup = canvas.onmouseleave = () => { drawing = false; };
+  canvas.ontouchstart = e => { e.preventDefault(); drawing = true; [lastX, lastY] = getPos(e); };
+  canvas.ontouchmove = e => {
+    e.preventDefault();
+    if (!drawing) return;
+    const [x, y] = getPos(e);
+    ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke();
+    [lastX, lastY] = [x, y];
+  };
+  canvas.ontouchend = () => { drawing = false; };
+  sigPads[canvasId] = canvas;
+}
+
+function clearSig(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function getSigData(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return null;
+  return canvas.toDataURL('image/png');
+}
+
+// ══════════════════════════════════════════════════════
+//  MODAL HELPERS
+// ══════════════════════════════════════════════════════
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.remove('open');
+  });
+});
+
+// ══════════════════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════════════════
+function toast(msg, type = 'success') {
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span>${type === 'success' ? '✅' : type === 'danger' ? '❌' : 'ℹ️'}</span><span>${msg}</span>`;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+// ══════════════════════════════════════════════════════
+//  SEED DATA (demo)
+// ══════════════════════════════════════════════════════
+if (!requests.length) {
+  requests = [
+    {
+      id:'REP2506-001', title:'แอร์ห้องประชุมไม่เย็น', detail:'แอร์ห้องประชุมชั้น 2 เปิดแล้วไม่เย็น มีเสียงดังผิดปกติ',
+      type:'แอร์ / ระบบทำความเย็น', priority:'เร่งด่วน', requester:'สมหญิง ดีงาม',
+      dept:'ห้องประชุม ชั้น 2', status:'ซ่อมเสร็จ', assignedTo:'ช่างสมชาย',
+      assignNote:'ตรวจสอบระบบน้ำยาและฟิลเตอร์', completeNote:'ล้างฟิลเตอร์และเติมน้ำยาแล้ว ปรับตั้งค่าใหม่',
+      createdAt: new Date(Date.now() - 3*86400000).toISOString(),
+      completedAt: new Date(Date.now() - 86400000).toISOString(),
+      photosBefore:[], photosAfter:[], sigTech:null, sigUser:null,
+    },
+    {
+      id:'REP2506-002', title:'หลอดไฟห้องน้ำชำรุด', detail:'หลอดไฟห้องน้ำชาย ชั้น 1 ดับทั้งหมด 3 ดวง',
+      type:'ไฟฟ้า', priority:'ปกติ', requester:'วิทยา สุขใจ', dept:'ฝ่ายบริหาร',
+      status:'กำลังซ่อม', assignedTo:'ช่างวิชัย',
+      assignNote:'', completeNote:'', createdAt: new Date(Date.now() - 86400000).toISOString(),
+      completedAt:null, photosBefore:[], photosAfter:[], sigTech:null, sigUser:null,
+    },
+    {
+      id:'REP2506-003', title:'ท่อน้ำรั่วห้องครัว', detail:'ท่อน้ำใต้ซิงค์ล้างจานรั่ว น้ำหยดลงพื้นตลอด',
+      type:'ประปา / ท่อ', priority:'เร่งด่วน', requester:'มาลี จันทร์แดง',
+      dept:'ห้องครัว', status:'รอดำเนินการ', assignedTo:null,
+      assignNote:'', completeNote:'', createdAt: new Date().toISOString(),
+      completedAt:null, photosBefore:[], photosAfter:[], sigTech:null, sigUser:null,
+    },
+  ];
+  saveData();
+}
+</script>
+</body>
+</html>
