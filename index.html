@@ -1761,7 +1761,7 @@ function openComplete(id) {
   document.getElementById('previewAfter').innerHTML = '';
   document.getElementById('completeNote').value = '';
   openModal('modalComplete');
-  setTimeout(() => initSigPad('sigTech'), 100);
+
 }
 
 function confirmComplete() {
@@ -1771,7 +1771,6 @@ function confirmComplete() {
   if (!note) return toast('กรุณาสรุปงานซ่อม', 'danger');
   r.completeNote = note;
   r.photosAfter = [...photosAfter];
-  r.sigTech = getSigData('sigTech');
   r.status = 'ซ่อมเสร็จ';
   r.completedAt = new Date().toISOString();
   saveData();
@@ -1827,8 +1826,8 @@ function openPrint(id) {
     : '<p style="color:#94a3b8;font-size:13px;padding:12px 0">ไม่มีรูปหลังซ่อม</p>';
 
   const sigTechHtml = r.sigTech
-    ? `<img src="${r.sigTech}" style="width:100%;max-height:90px;object-fit:contain;border-bottom:1.5px solid #1e293b">`
-    : '<div style="height:70px;border-bottom:1.5px solid #1e293b"></div>';
+    
+     '<div style="height:70px;border-bottom:1.5px solid #1e293b"></div>';
   const sigUserHtml = r.sigUser
     ? `<img src="${r.sigUser}" style="width:100%;max-height:90px;object-fit:contain;border-bottom:1.5px solid #1e293b">`
     : '<div style="height:70px;border-bottom:1.5px solid #1e293b"></div>';
