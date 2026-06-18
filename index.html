@@ -1,3 +1,4 @@
+<!-- //day -->
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -698,170 +699,6 @@
     #app { display: none; }
     #printArea { display: block !important; padding: 20px; }
   }
-
-  /* ── RESPONSIVE MOBILE ──────────────────────── */
-  @media (max-width: 768px) {
-
-    /* Login */
-    .login-box { padding: 32px 20px; border-radius: 16px; }
-    .login-logo .icon { width: 52px; height: 52px; font-size: 22px; }
-    .login-logo h1 { font-size: 18px; }
-    .login-tab { font-size: 12px; padding: 7px 4px; }
-
-    /* Sidebar → hidden on mobile, replaced by bottom nav */
-    .sidebar { transform: translateX(-100%); }
-    .sidebar.open { transform: translateX(0); box-shadow: var(--shadow-lg); }
-    #sidebarOverlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,.45);
-      z-index: 99; display: none;
-    }
-    #sidebarOverlay.show { display: block; }
-
-    /* Main takes full width */
-    .main { margin-left: 0; padding-bottom: 70px; }
-
-    /* Topbar */
-    .topbar { padding: 0 14px; height: 54px; }
-    .topbar-title { font-size: 15px; }
-    #menuToggle {
-      display: flex !important;
-      align-items: center; justify-content: center;
-      width: 36px; height: 36px;
-      background: var(--bg); border: none; border-radius: 8px;
-      font-size: 18px; cursor: pointer; flex-shrink: 0;
-    }
-
-    /* Content */
-    .content { padding: 16px 12px; }
-
-    /* Stats grid: 2 cols */
-    .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-    .stat-card { padding: 14px 12px; gap: 10px; }
-    .stat-icon { width: 38px; height: 38px; font-size: 18px; border-radius: 10px; }
-    .stat-num { font-size: 22px; }
-    .stat-label { font-size: 12px; }
-
-    /* Card */
-    .card { border-radius: 10px; margin-bottom: 14px; }
-    .card-header { padding: 12px 14px; flex-wrap: wrap; gap: 8px; }
-    .card-title { font-size: 14px; }
-    .card-body { padding: 14px; }
-
-    /* Grid-2 → single col */
-    .grid-2 { grid-template-columns: 1fr; gap: 0; }
-
-    /* Table → card list */
-    .table-wrap { overflow: visible; }
-    table, thead, tbody, th, td, tr { display: block; }
-    thead { display: none; }
-    tbody tr {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      margin-bottom: 10px;
-      padding: 12px 14px;
-      position: relative;
-    }
-    tbody tr:hover { background: var(--card); }
-    tbody td {
-      padding: 3px 0;
-      border: none;
-      font-size: 13px;
-      display: flex;
-      align-items: flex-start;
-      gap: 6px;
-    }
-    tbody td::before {
-      content: attr(data-label);
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: .4px;
-      min-width: 70px;
-      flex-shrink: 0;
-      padding-top: 1px;
-    }
-    tbody td:first-child { font-size: 11px; color: var(--text-muted); }
-    tbody td:last-child { margin-top: 8px; }
-    tbody td .flex { flex-wrap: wrap; }
-
-    /* Modal → slide up from bottom */
-    .modal-overlay { align-items: flex-end; padding: 0; }
-    .modal {
-      border-radius: 18px 18px 0 0;
-      max-height: 95vh;
-      max-width: 100%;
-      transform: translateY(100%);
-    }
-    .modal-overlay.open .modal { transform: translateY(0); }
-    .modal-header { padding: 16px 18px 12px; }
-    .modal-body { padding: 14px 18px; }
-    .modal-footer { padding: 12px 18px; flex-wrap: wrap; }
-    .modal-footer .btn { flex: 1; justify-content: center; min-width: 100px; }
-
-    /* Bottom nav */
-    #bottomNav {
-      display: flex !important;
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      background: var(--sidebar-bg);
-      border-top: 1px solid rgba(255,255,255,.08);
-      z-index: 90;
-      padding: 0 4px;
-      padding-bottom: env(safe-area-inset-bottom, 0px);
-    }
-    .bottom-nav-item {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 8px 4px;
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--sidebar-text);
-      border: none;
-      background: transparent;
-      font-family: inherit;
-      cursor: pointer;
-      gap: 3px;
-      transition: color .2s;
-      min-height: 56px;
-    }
-    .bottom-nav-item .bnav-icon { font-size: 20px; line-height: 1; }
-    .bottom-nav-item.active { color: #60a5fa; }
-    .bottom-nav-item.logout { color: #f87171; }
-
-    /* Info rows in modal */
-    .info-row { flex-direction: column; gap: 2px; }
-    .info-row .label { width: auto; font-size: 11px; }
-    .info-row .value { font-size: 14px; }
-
-    /* Status steps - smaller text */
-    .status-step { font-size: 10px; padding: 8px 4px; }
-
-    /* Form */
-    .form-input, .form-select, .form-textarea { font-size: 16px; } /* prevent iOS zoom */
-
-    /* Print doc on mobile */
-    .print-doc { padding: 16px; }
-    .print-grid { grid-template-columns: 1fr; }
-    .print-photos { grid-template-columns: 1fr; }
-    .print-sigs { grid-template-columns: 1fr; gap: 16px; }
-
-    /* Toast */
-    #toastContainer { top: auto; bottom: 76px; right: 12px; left: 12px; }
-    .toast { min-width: auto; width: 100%; }
-
-    /* Filter select in card header */
-    .card-header select { font-size: 12px; padding: 5px 8px; }
-  }
-
-  /* Desktop: hide mobile-only elements */
-  #menuToggle { display: none; }
-  #bottomNav { display: none; }
-  #sidebarOverlay { display: none; }
 </style>
 </head>
 <body>
@@ -920,8 +757,6 @@
 
 <!-- ══ APP ══════════════════════════════════════════ -->
 <div id="app" class="hidden">
-  <!-- Sidebar overlay for mobile -->
-  <div id="sidebarOverlay" onclick="toggleSidebar()"></div>
   <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -948,10 +783,7 @@
   <!-- Main -->
   <div class="main">
     <div class="topbar">
-      <div style="display:flex;align-items:center;gap:10px">
-        <button id="menuToggle" onclick="toggleSidebar()">☰</button>
-        <div class="topbar-title" id="topbarTitle">หน้าหลัก</div>
-      </div>
+      <div class="topbar-title" id="topbarTitle">หน้าหลัก</div>
       <div class="topbar-actions" id="topbarActions"></div>
     </div>
     <div class="content">
@@ -1104,8 +936,6 @@
       </div>
 
     </div>
-    <!-- Bottom Nav (mobile) -->
-    <nav id="bottomNav"></nav>
   </div>
 </div>
 
@@ -1171,7 +1001,13 @@
         <input type="file" id="fileInputAfter" multiple accept="image/*" class="hidden" onchange="previewImages(this,'previewAfter','photosAfter')">
         <div class="img-preview-grid" id="previewAfter"></div>
       </div>
-      
+      <div class="form-group">
+        <label class="form-label">ลายเซ็นช่าง</label>
+        <div class="sig-pad-wrap">
+          <canvas id="sigTech" height="100"></canvas>
+          <button class="sig-clear" onclick="clearSig('sigTech')">ล้าง</button>
+          <div class="sig-pad-label">เซ็นชื่อในกรอบด้านบน</div>
+        </div>
       </div>
     </div>
     <div class="modal-footer">
@@ -1310,7 +1146,6 @@ function initApp() {
     currentUser.type === 'tech' ? 'ช่างซ่อม' : 'ผู้แจ้งซ่อม';
 
   buildNav();
-  buildBottomNav();
   if (currentUser.type === 'user') {
     document.getElementById('newReqName').value = currentUser.name;
     document.getElementById('newReqDept').value = currentUser.dept;
@@ -1322,65 +1157,20 @@ function initApp() {
   }
 }
 
-function toggleSidebar() {
-  const sb = document.getElementById('sidebar');
-  const ov = document.getElementById('sidebarOverlay');
-  const open = sb.classList.toggle('open');
-  ov.classList.toggle('show', open);
-}
-
-function closeSidebar() {
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('sidebarOverlay').classList.remove('show');
-}
-
-function buildBottomNav() {
-  const bnav = document.getElementById('bottomNav');
-  if (!bnav) return;
-  const items =
-    currentUser.type === 'user' ? [
-      { id:'secNew', icon:'📋', label:'แจ้งซ่อม' },
-      { id:'secMyRequests', icon:'📂', label:'รายการ' },
-      { id:'__logout', icon:'🚪', label:'ออก' },
-    ] :
-    currentUser.type === 'tech' ? [
-      { id:'secMyJobs', icon:'🔧', label:'งานของฉัน' },
-      { id:'__logout', icon:'🚪', label:'ออก' },
-    ] : [
-      { id:'secDashboard', icon:'📊', label:'ภาพรวม' },
-      { id:'secAllRequests', icon:'📋', label:'ทั้งหมด' },
-      { id:'__logout', icon:'🚪', label:'ออก' },
-    ];
-  bnav.innerHTML = items.map(item => `
-    <button class="bottom-nav-item ${item.id === '__logout' ? 'logout' : ''}" id="bnav_${item.id}"
-      onclick="${item.id === '__logout' ? 'logout()' : `navigate('${item.id}')`}">
-      <span class="bnav-icon">${item.icon}</span>${item.label}
-    </button>
-  `).join('');
-}
-
-function updateBottomNav(secId) {
-  document.querySelectorAll('.bottom-nav-item').forEach(b => b.classList.remove('active'));
-  const active = document.getElementById('bnav_' + secId);
-  if (active) active.classList.add('active');
-}
-
 function buildNav() {
   const nav = document.getElementById('sidebarNav');
   nav.innerHTML = '';
-
   const items =
     currentUser.type === 'user' ? [
       { id:'secNew', icon:'📋', label:'แจ้งซ่อม' },
-      { id:'secMyRequests', icon:'📂', label:'รายการของฉัน' }
+      { id:'secMyRequests', icon:'📂', label:'รายการของฉัน' },
     ] :
     currentUser.type === 'tech' ? [
-      { id:'secMyJobs', icon:'🔧', label:'งานของฉัน' }
+      { id:'secMyJobs', icon:'🔧', label:'งานของฉัน' },
     ] : [
       { id:'secDashboard', icon:'📊', label:'ภาพรวม' },
-      { id:'secAllRequests', icon:'📋', label:'ใบแจ้งซ่อมทั้งหมด' }
+      { id:'secAllRequests', icon:'📋', label:'ใบแจ้งซ่อมทั้งหมด' },
     ];
-
   items.forEach(item => {
     const btn = document.createElement('button');
     btn.className = 'nav-item';
@@ -1398,8 +1188,6 @@ function navigate(secId) {
   if (sec) sec.classList.add('active');
   const nav = document.getElementById('nav_' + secId);
   if (nav) nav.classList.add('active');
-  updateBottomNav(secId);
-  closeSidebar();
   const titles = {
     secDashboard:'📊 ภาพรวม',
     secNew:'📋 แจ้งซ่อมใหม่',
@@ -1517,8 +1305,7 @@ function statusBadge(s) {
 
 function priorityBadge(p) {
   const map = { 'ปกติ':'#94a3b8', 'เร่งด่วน':'#f59e0b', 'วิกฤต':'#ef4444' };
-  const icon = p==='วิกฤต'?'🔴':p==='เร่งด่วน'?'🟡':'⚪';
-  return `<span style="color:${map[p]||'#94a3b8'};font-weight:700;font-size:13px">${icon} ${p}</span>`;
+  return `<span style="color:${map[p]};font-weight:700;font-size:13px">${p==='วิกฤต'?'🔴':'p'==='เร่งด่วน'?'🟡':'⚪'} ${p}</span>`;
 }
 
 // ══════════════════════════════════════════════════════
@@ -1544,12 +1331,12 @@ function renderDashboard() {
   }
   tbody.innerHTML = requests.slice(0,10).map(r => `
     <tr>
-      <td data-label="รหัส"><b style="font-size:12px;color:var(--text-light)">${r.id}</b></td>
-      <td data-label="หัวข้อ"><b>${r.title}</b></td>
-      <td data-label="ผู้แจ้ง">${r.requester}</td>
-      <td data-label="วันที่" style="font-size:13px;color:var(--text-light)">${formatDate(r.createdAt)}</td>
-      <td data-label="สถานะ">${statusBadge(r.status)}</td>
-      <td data-label="ช่าง">${r.assignedTo || '<span class="text-muted">-</span>'}</td>
+      <td><b style="font-size:12px;color:var(--text-light)">${r.id}</b></td>
+      <td><b>${r.title}</b></td>
+      <td>${r.requester}</td>
+      <td style="font-size:13px;color:var(--text-light)">${formatDate(r.createdAt)}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td>${r.assignedTo || '<span class="text-muted">-</span>'}</td>
     </tr>
   `).join('');
 }
@@ -1566,13 +1353,13 @@ function renderMyRequests() {
   }
   tbody.innerHTML = mine.map(r => `
     <tr>
-      <td data-label="รหัส"><b style="font-size:12px;color:var(--text-light)">${r.id}</b></td>
-      <td data-label="หัวข้อ"><b>${r.title}</b></td>
-      <td data-label="ประเภท"><span class="badge badge-assigned" style="background:#f1f5f9;color:#475569">${r.type}</span></td>
-      <td data-label="วันที่" style="font-size:13px;color:var(--text-light)">${formatDate(r.createdAt)}</td>
-      <td data-label="สถานะ">${statusBadge(r.status)}</td>
-      <td data-label="ช่าง">${r.assignedTo || '<span class="text-muted">-</span>'}</td>
-      <td data-label="">
+      <td><b style="font-size:12px;color:var(--text-light)">${r.id}</b></td>
+      <td><b>${r.title}</b></td>
+      <td><span class="badge badge-assigned" style="background:#f1f5f9;color:#475569">${r.type}</span></td>
+      <td style="font-size:13px;color:var(--text-light)">${formatDate(r.createdAt)}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td>${r.assignedTo || '<span class="text-muted">-</span>'}</td>
+      <td>
         <div class="flex gap-2">
           <button class="btn btn-secondary btn-sm" onclick="viewDetail('${r.id}','user')">👁 ดู</button>
           ${r.status === 'ซ่อมเสร็จ' && !r.sigUser ? `<button class="btn btn-success btn-sm" onclick="openSign('${r.id}')">✍️ เซ็น</button>` : ''}
@@ -1597,13 +1384,13 @@ function renderMyJobs() {
   }
   tbody.innerHTML = all.map(r => `
     <tr>
-      <td data-label="รหัส"><b style="font-size:12px;color:var(--text-light)">${r.id}</b></td>
-      <td data-label="หัวข้อ"><b>${r.title}</b></td>
-      <td data-label="ผู้แจ้ง">${r.requester}<br><span class="text-sm text-light">${r.dept}</span></td>
-      <td data-label="ประเภท">${r.type}</td>
-      <td data-label="ความเร่งด่วน">${priorityBadge(r.priority)}</td>
-      <td data-label="สถานะ">${statusBadge(r.status)}</td>
-      <td data-label="">
+      <td><b style="font-size:12px;color:var(--text-light)">${r.id}</b></td>
+      <td><b>${r.title}</b></td>
+      <td>${r.requester}<br><span class="text-sm text-light">${r.dept}</span></td>
+      <td>${r.type}</td>
+      <td>${priorityBadge(r.priority)}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td>
         <div class="flex gap-2">
           <button class="btn btn-secondary btn-sm" onclick="viewDetail('${r.id}','tech')">👁 ดู</button>
           ${r.status === 'มอบหมายแล้ว' ? `<button class="btn btn-warning btn-sm" onclick="startJob('${r.id}')">▶ รับงาน</button>` : ''}
@@ -1627,15 +1414,15 @@ function renderAllTable() {
   }
   tbody.innerHTML = list.map(r => `
     <tr>
-      <td data-label="รหัส"><b style="font-size:12px;color:var(--text-light)">${r.id}</b></td>
-      <td data-label="หัวข้อ"><b>${r.title}</b><br><span class="text-sm text-light">${r.type}</span></td>
-      <td data-label="ผู้แจ้ง">${r.requester}</td>
-      <td data-label="แผนก">${r.dept}</td>
-      <td data-label="วันที่" style="font-size:12px;color:var(--text-light)">${formatDate(r.createdAt)}</td>
-      <td data-label="เร่งด่วน">${priorityBadge(r.priority)}</td>
-      <td data-label="สถานะ">${statusBadge(r.status)}</td>
-      <td data-label="ช่าง">${r.assignedTo || '<span class="text-muted">ยังไม่มอบหมาย</span>'}</td>
-      <td data-label="">
+      <td><b style="font-size:12px;color:var(--text-light)">${r.id}</b></td>
+      <td><b>${r.title}</b><br><span class="text-sm text-light">${r.type}</span></td>
+      <td>${r.requester}</td>
+      <td>${r.dept}</td>
+      <td style="font-size:12px;color:var(--text-light)">${formatDate(r.createdAt)}</td>
+      <td>${priorityBadge(r.priority)}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td>${r.assignedTo || '<span class="text-muted">ยังไม่มอบหมาย</span>'}</td>
+      <td>
         <div class="flex gap-2">
           <button class="btn btn-secondary btn-sm" onclick="viewDetail('${r.id}','admin')">👁 ดู</button>
           ${r.status === 'รอดำเนินการ' ? `<button class="btn btn-primary btn-sm" onclick="openAssign('${r.id}')">👷 มอบหมาย</button>` : ''}
@@ -1755,7 +1542,7 @@ function openComplete(id) {
   document.getElementById('previewAfter').innerHTML = '';
   document.getElementById('completeNote').value = '';
   openModal('modalComplete');
-
+  setTimeout(() => initSigPad('sigTech'), 100);
 }
 
 function confirmComplete() {
@@ -1765,6 +1552,7 @@ function confirmComplete() {
   if (!note) return toast('กรุณาสรุปงานซ่อม', 'danger');
   r.completeNote = note;
   r.photosAfter = [...photosAfter];
+  r.sigTech = getSigData('sigTech');
   r.status = 'ซ่อมเสร็จ';
   r.completedAt = new Date().toISOString();
   saveData();
@@ -1820,8 +1608,8 @@ function openPrint(id) {
     : '<p style="color:#94a3b8;font-size:13px;padding:12px 0">ไม่มีรูปหลังซ่อม</p>';
 
   const sigTechHtml = r.sigTech
-    
-     '<div style="height:70px;border-bottom:1.5px solid #1e293b"></div>';
+    ? `<img src="${r.sigTech}" style="width:100%;max-height:90px;object-fit:contain;border-bottom:1.5px solid #1e293b">`
+    : '<div style="height:70px;border-bottom:1.5px solid #1e293b"></div>';
   const sigUserHtml = r.sigUser
     ? `<img src="${r.sigUser}" style="width:100%;max-height:90px;object-fit:contain;border-bottom:1.5px solid #1e293b">`
     : '<div style="height:70px;border-bottom:1.5px solid #1e293b"></div>';
