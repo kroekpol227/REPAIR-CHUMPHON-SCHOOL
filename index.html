@@ -1150,7 +1150,7 @@
   </div>
 </div>
 
-<!-- Modal: ซ่อมเสร็จ (ช่าง) [แก้ไข: ลบฟอร์มลายเซ็นออนไลน์ออกแล้ว] -->
+<!-- Modal: ซ่อมเสร็จ (ช่าง) -->
 <div class="modal-overlay" id="modalComplete">
   <div class="modal" style="max-width:560px">
     <div class="modal-header">
@@ -1363,6 +1363,44 @@ function updateBottomNav(secId) {
   if (active) active.classList.add('active');
 }
 
+// แก้ไขฟังก์ชัน navigate ให้ปลอดภัยขึ้นบนมือถือ
+function navigate(secId) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  
+  const sec = document.getElementById(secId);
+  if (sec) sec.classList.add('active');
+  const nav = document.getElementById('nav_' + secId);
+  if (nav) nav.classList.add('active');
+  
+  updateBottomNav(secId);
+  closeSidebar();
+
+  const titles = {
+    secDashboard:'📊 ภาพรวม',
+    secNew:'📋 แจ้งซ่อมใหม่',
+    secMyRequests:'📂 รายการของฉัน',
+    secMyJobs:'🔧 งานของฉัน',
+    secAllRequests:'📋 ใบแจ้งซ่อมทั้งหมด',
+  };
+  document.getElementById('topbarTitle').textContent = titles[secId] || '';
+  const actions = document.getElementById('topbarActions');
+  actions.innerHTML = '';
+  if (secId === 'secNew') {
+    const btn = document.createElement('button');
+    btn.className = 'btn btn-secondary btn-sm';
+    btn.innerHTML = '🔄 ล้างแบบฟอร์ม';
+    btn.onclick = clearNewForm;
+    actions.appendChild(btn);
+  }
+  if (secId === 'secDashboard') renderDashboard();
+  if (secId === 'secMyRequests') renderMyRequests();
+  if (secId === 'secMyJobs') renderMyJobs();
+  if (secId === 'secAllRequests') renderAllTable();
+  
+  window.scrollTo(0, 0); // เลื่อนหน้าจอกลับไปด้านบนเพื่อความสมบูรณ์บนมือถือ
+}
+
 function buildNav() {
   const nav = document.getElementById('sidebarNav');
   nav.innerHTML = '';
@@ -1387,38 +1425,6 @@ function buildNav() {
     btn.onclick = () => navigate(item.id);
     nav.appendChild(btn);
   });
-}
-
-function navigate(secId) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const sec = document.getElementById(secId);
-  if (sec) sec.classList.add('active');
-  const nav = document.getElementById('nav_' + secId);
-  if (nav) nav.classList.add('active');
-  updateBottomNav(secId);
-  closeSidebar();
-  const titles = {
-    secDashboard:'📊 ภาพรวม',
-    secNew:'📋 แจ้งซ่อมใหม่',
-    secMyRequests:'📂 รายการของฉัน',
-    secMyJobs:'🔧 งานของฉัน',
-    secAllRequests:'📋 ใบแจ้งซ่อมทั้งหมด',
-  };
-  document.getElementById('topbarTitle').textContent = titles[secId] || '';
-  const actions = document.getElementById('topbarActions');
-  actions.innerHTML = '';
-  if (secId === 'secNew') {
-    const btn = document.createElement('button');
-    btn.className = 'btn btn-secondary btn-sm';
-    btn.innerHTML = '🔄 ล้างแบบฟอร์ม';
-    btn.onclick = clearNewForm;
-    actions.appendChild(btn);
-  }
-  if (secId === 'secDashboard') renderDashboard();
-  if (secId === 'secMyRequests') renderMyRequests();
-  if (secId === 'secMyJobs') renderMyJobs();
-  if (secId === 'secAllRequests') renderAllTable();
 }
 
 // ══════════════════════════════════════════════════════
@@ -1457,7 +1463,7 @@ function removeImg(idx, previewId, storeVar, el) {
 }
 
 // ══════════════════════════════════════════════════════
-//  SUBMIT REQUEST
+//  SUBMIT REQUEST (แก้ไขจุดนี้ให้สลับหน้าบนมือถือสมบูรณ์)
 // ══════════════════════════════════════════════════════
 function submitRequest() {
   const title = document.getElementById('newReqTitle').value.trim();
@@ -1487,6 +1493,8 @@ function submitRequest() {
   saveData();
   clearNewForm();
   toast(`ส่งแจ้งซ่อม ${req.id} เรียบร้อย`, 'success');
+  
+  // เรียก navigate ไปที่หน้ารายการของฉัน และปิด Sidebar/Overlay ทั้งหมด
   navigate('secMyRequests');
 }
 
@@ -1802,7 +1810,7 @@ function deleteRequest(id) {
 }
 
 // ══════════════════════════════════════════════════════
-//  PRINT [แก้ไข: เอาส่วนแสดงรูปภาพ r.sigTech ออก คงไว้แต่ช่องสำหรับเขียนลายเซ็นสดด้วยปากกาเหมือนเดิม]
+//  PRINT
 // ══════════════════════════════════════════════════════
 function openPrint(id) {
   const r = requests.find(x => x.id === id);
@@ -1816,7 +1824,6 @@ function openPrint(id) {
     ? r.photosAfter.map(p => `<img src="${p}" style="width:100%;max-height:200px;object-fit:cover;border-radius:8px;margin-bottom:8px;border:1px solid #e2e8f0">`).join('')
     : '<p style="color:#94a3b8;font-size:13px;padding:12px 0">ไม่มีรูปหลังซ่อม</p>';
 
-  // ช่างใช้สำหรับเขียนเซ็นสดลงบนกระดาษเสมอ
   const sigTechHtml = '<div style="height:70px;border-bottom:1.5px solid #1e293b"></div>';
   const sigUserHtml = r.sigUser
     ? `<img src="${r.sigUser}" style="width:100%;max-height:90px;object-fit:contain;border-bottom:1.5px solid #1e293b">`
